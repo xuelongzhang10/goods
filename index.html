@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f1f2f5">
 <title>我的资产</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -17,7 +18,7 @@
       <div class="hero-top">
         <div class="hero-title">我的资产 <span id="itemCount" class="hero-count"></span></div>
         <div class="hero-actions">
-          <button class="pill-btn" id="searchBtn" title="搜索">
+          <button class="pill-btn" id="searchBtn" title="搜索" aria-label="搜索">
             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </button>
           <button class="pill-btn pill-btn-solid" id="addBtn">添加</button>
@@ -43,13 +44,13 @@
         <button class="tab" data-filter="favorite">收藏中</button>
       </div>
       <div class="sort-group">
-        <select id="sortField" class="sort-select">
+        <select id="sortField" class="sort-select" aria-label="排序字段">
           <option value="date">按添加</option>
           <option value="days">按天数</option>
           <option value="price">按单价</option>
           <option value="daily">按日均</option>
         </select>
-        <button class="icon-btn" id="sortDir" title="切换排序方向">
+        <button class="icon-btn" id="sortDir" title="切换排序方向" aria-label="切换排序方向">
           <svg viewBox="0 0 24 24"><path d="M7 4v16M7 4l-3 3M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></svg>
         </button>
       </div>
@@ -99,17 +100,21 @@
       <div class="page-title">我的</div>
     </header>
     <div class="profile-body">
-      <div class="profile-row" id="exportBtn">
-        <span>导出数据 (JSON)</span>
-        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      <div class="profile-group">
+        <button type="button" class="profile-row" id="exportBtn">
+          <span>导出数据 (JSON)</span>
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <button type="button" class="profile-row" id="importBtn">
+          <span>导入数据 (JSON)</span>
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
-      <div class="profile-row" id="importBtn">
-        <span>导入数据 (JSON)</span>
-        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-      <div class="profile-row danger" id="clearBtn">
-        <span>清空所有数据</span>
-        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      <div class="profile-group">
+        <button type="button" class="profile-row danger" id="clearBtn">
+          <span>清空所有数据</span>
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
       <input type="file" id="importFile" accept="application/json" hidden>
     </div>
@@ -138,10 +143,10 @@
 
 <!-- ===== 添加/编辑弹层 ===== -->
 <div class="modal-mask" id="modalMask">
-  <div class="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-header">
       <span id="modalTitle">添加物品</span>
-      <button class="modal-close" id="modalClose">&times;</button>
+      <button type="button" class="modal-close" id="modalClose" aria-label="关闭">&times;</button>
     </div>
     <form id="itemForm">
       <label class="field">
@@ -150,7 +155,7 @@
       </label>
       <label class="field">
         <span>价格 (¥)</span>
-        <input type="number" id="fPrice" required min="0" step="0.01" placeholder="0.00">
+        <input type="number" inputmode="decimal" id="fPrice" required min="0" step="0.01" placeholder="0.00">
       </label>
       <label class="field">
         <span>购买日期</span>
