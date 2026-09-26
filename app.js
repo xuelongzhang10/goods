@@ -129,20 +129,31 @@
       var card = document.createElement("div");
       card.className = "card" + (item.active ? "" : " idle");
       card.dataset.id = item.id;
+      card.setAttribute("role", "button");
+      card.tabIndex = 0;
+      card.setAttribute("aria-label", "编辑 " + item.name);
       card.innerHTML =
-        '<div class="card-fav">' + (item.favorite ? favSvgFilled() : "") + "</div>" +
-        '<div class="card-top">' +
-          '<div class="card-icon"><svg viewBox="0 0 24 24">' + iconDef.svg + "</svg></div>" +
-          '<div class="card-days">' + m.days + '<span class="card-days-unit">天</span></div>' +
-        "</div>" +
+        '<div class="card-icon"><svg viewBox="0 0 24 24">' + iconDef.svg + "</svg></div>" +
         '<div class="card-info">' +
-          '<div class="card-name">' + escapeHtml(item.name) + "</div>" +
-          '<div class="card-bottom">' +
-            '<span class="card-price">' + money(item.price) + "</span>" +
-            '<span class="card-daily">' + money(m.daily) + "/天</span>" +
+          '<div class="card-name-row">' +
+            '<span class="card-name">' + escapeHtml(item.name) + "</span>" +
+            (item.favorite ? '<span class="card-fav" title="已收藏">' + favSvgFilled() + "</span>" : "") +
           "</div>" +
+          '<div class="card-meta">' +
+            '<span class="card-price">' + money(item.price) + "</span>" +
+            '<span class="card-dot"></span>' +
+            '<span class="card-days">' + m.days + " 天</span>" +
+            (item.active ? "" : '<span class="card-tag">闲置</span>') +
+          "</div>" +
+        "</div>" +
+        '<div class="card-metric">' +
+          '<div class="card-daily">' + money(m.daily) + "</div>" +
+          '<div class="card-daily-unit">每天</div>' +
         "</div>";
       card.addEventListener("click", function () { openModal(item.id); });
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(item.id); }
+      });
       grid.appendChild(card);
     });
   }
@@ -231,10 +242,12 @@
     document.getElementById("fActive").checked = item ? item.active : true;
     document.getElementById("fFavorite").checked = item ? item.favorite : false;
     document.getElementById("modalMask").classList.add("open");
+    document.body.classList.add("no-scroll");
   }
 
   function closeModal() {
     document.getElementById("modalMask").classList.remove("open");
+    document.body.classList.remove("no-scroll");
     state.editingId = null;
   }
 
@@ -315,6 +328,9 @@
     document.getElementById("modalClose").addEventListener("click", closeModal);
     document.getElementById("modalMask").addEventListener("click", function (e) {
       if (e.target === e.currentTarget) closeModal();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && document.getElementById("modalMask").classList.contains("open")) closeModal();
     });
     document.getElementById("itemForm").addEventListener("submit", handleSubmit);
     document.getElementById("deleteBtn").addEventListener("click", handleDelete);
